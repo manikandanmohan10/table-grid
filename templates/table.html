@@ -1,0 +1,576 @@
+<div class="body-container">
+    <div class="icon-wrap">
+      <div class="icon-content">
+  
+        <span ng-click="toggleSidenav()" class="material-symbols-outlined icon-size">
+          menu
+        </span> Views
+  
+      </div>
+      <div class="icon-content second-icon">
+  
+        <span class="material-symbols-outlined icon-size" style="color: rgb(31 127 247);">
+          table
+        </span>
+        <span>
+          {{groupValue}}
+        </span>
+  
+        <span class="material-symbols-outlined icon-size">
+          groups_2
+        </span>
+        <span class="material-symbols-outlined icon-size">
+          keyboard_arrow_down
+        </span>
+  
+      </div>
+      <div class="hide-column">
+        <div class="icon-content">
+          <span class="material-symbols-outlined icon-size" ng-click="callDropdown()" id="triggerClosePopup">
+            visibility_off
+          </span> <span ng-if="(hidingColumnArryList.length - column.length) >=1">{{hidingColumnArryList.length -
+            column.length}}</span> Hidden fields
+        </div>
+        <div id="closePopup" class="hide-column-list " ng-if="viewHideColumn">
+          <div>
+            <input style="max-width: 135px;" placeholder="Filter" ng-model="FilterHidenList" type="serach"
+              ng-change="hidenColumnFilter(FilterHidenList)" />
+            <span class="material-symbols-outlined">help</span>
+          </div>
+          <ul ng-repeat="col in hidingColumnArryList" draggable="true" class="list-data">
+            <li>{{col.fieldName}}</li>
+            <input type="checkbox" ng-model="col.checked" ng-click="hidingColumn(col.field, $event)" />
+          </ul>
+        </div>
+      </div>
+  
+      <div class="icon-content">
+        <span id="triggerClosePopup" class="material-symbols-outlined icon-size triggerPopup" data-target="#filterModal"
+          data-toggle="modal" ng-click="toggleFilterPopup()">
+          filter_list
+        </span>
+  
+        <span style="text-align: center;">Filter</span>
+      </div>
+      <div class="icon-content">
+        <span class="material-symbols-outlined icon-size">
+          featured_play_list
+        </span> Group
+      </div>
+      <!-- Sort -->
+      <div class="icon-content">
+  
+        <span class="material-symbols-outlined icon-size" id="triggerClosePopup"
+          ng-click="showSortPopup($event); columnDatatype(); ">
+          swap_vert
+        </span> Sort
+  
+      </div>
+      <div id="closePopup" class="popup" ng-show="sortPopupVisible" ng-style="popupPosition">
+        <h4>
+          Sort by
+        </h4>
+  
+        <hr />
+  
+        <div ng-repeat="(key, value) in sortedFieldDict" class="sort-list">
+          <div class="grid">
+            <span class="sort-key">{{ key }}</span>
+            {{}}
+            <span class="sort-number" ng-if="columnDatatypeDict[key] === 'number'">
+              1-9
+            </span>
+            <span class="sort-letter" ng-if="!(columnDatatypeDict[key] === 'number')">
+              A-Z
+            </span>
+            <span class="sort-value" ng-click="updateAscDsc(key, value)">
+              <span ng-if="value"><span class="material-symbols-outlined sortpopup">
+                  arrow_upward
+                </span></span>
+              <span ng-if="!value"><span class="material-symbols-outlined sortpopup">
+                  arrow_downward
+                </span></span>
+            </span>
+            <button type="button" class=" btn icon card-btn" ng-click="removeSort(key)"><span
+                class="sortPopup material-symbols-outlined filter-box-icon">
+                delete
+              </span></button>
+          </div>
+  
+        </div>
+  
+        <div class="card-header " ng-click="showOptions = !showOptions">
+          <span class="material-symbols-outlined" class="custom-select" ng-model="sortField" ng-change="updateMyObj()">
+            add
+          </span>
+          <span class="icon-text">Add Another field </span>
+        </div>
+  
+        <div class="custom" ng-model="sortField" ng-show="showOptions" id="exampleFormControlSelect2">
+          <h5>Find a Field</h5>
+          <div class="option-val" ng-repeat="col in column" value="{{col.field}}" ng-click="updateMyObj(col.field);">
+            {{col.fieldName}}</div>
+        </div>
+        <button class="btn btn-primary  card-btn" ng-click="hideSortPopup()">Close Popup</button>
+      </div>
+  
+  
+      <div class="icon-content">
+        <span class="material-symbols-outlined icon-size">
+          format_color_fill
+        </span> Color
+      </div>
+      <div class="icon-content">
+        <span class="material-symbols-outlined icon-size">
+          grading
+        </span>
+      </div>
+      <div class="icon-content">
+        <span class="material-symbols-outlined icon-size">
+          share_windows
+        </span> Share view
+      </div>
+    </div>
+  
+    <div id="closePopup" class="filterPopup" ng-if="filterIcon" ng-click="keyPresses($event, 0, 0)" id="popup filter">
+  
+      <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="tab-icon">
+              <span ng-click="filter_column = true"
+                ng-style="filter_column && {'background-color':'#337ab7'}">Filter</span>
+              <span ng-click="filter_column = false"
+                ng-style="!filter_column && {'background-color':'#337ab7'}">column</span>
+            </div>
+  
+            <div class="modal-body">
+              <form>
+                <!-- Display existing formArray fields -->
+                <div ng-repeat="field in myForm.myFields" class="filterArray" ng-if="filter_column">
+                  <div>
+                    <select ng-model="field.condition" ng-options="item for item in conditionDropdownItems">
+                      <option value="">Select an option</option>
+                    </select>
+                    <select ng-model="field.columnName" ng-options="item.field for item in column">
+                      <option ng-if="fieldNameValue" value="" ng-selected="fieldNameValue">{{fieldName}}</option>
+                      <option value="">Select an option</option>
+                    </select>
+                    <select ng-model="field.expression" ng-options="item for item in expressionDropdownItems">
+                      <option value="">Select an option</option>
+                    </select>
+  
+                    <input type="text" ng-model="field.value">
+                  </div>
+                  <div id="closePopup">
+                    <button class="btn icon" ng-click="removeField($index)"><span
+                        class="material-symbols-outlined filter-box-icon">
+                        delete
+                      </span></button>
+                  </div>
+                </div>
+  
+  
+                <!-- Add new formArray field -->
+                <button ng-if="filter_column" class="btn icon addButton" ng-click="addField()">
+                  Add
+                </button>
+              </form>
+            </div>
+            <div class="modal-body" ng-if="!filter_column" style="margin-left: 15px;">
+              <form>
+                <div class="tab-icon">
+                  <div class="searchinp">
+                    <div style="background-color: none; align-items: center; gap: 15px;" class="addColumnFil">
+                      <input type="text" ng-model="searchItem" class="inp" style="    border-radius: 5px;
+                      text-align: center;" ng-change="hidenColumnFilter(searchItem)" />
+                      <p class="material-symbols-outlined icon searchIcon" style="position: absolute;left: 27px;">search
+                      </p>
+                      <div>
+  
+                        <div ng-if="true" id="box"></div>
+                      </div>
+                    </div>
+  
+  
+                  </div>
+  
+                </div>
+  
+              </form>
+              <div ng-if="(searchItem)" style="    width: 270px;
+              overflow: auto;border: 1px solid;height: 250px;">
+  
+                <ul ng-repeat="col in hidingColumnArryList" class="list-data">
+                  <li ng-click="getColumn(col.field)">{{col.fieldName}}</li>
+                </ul>
+              </div>
+            </div>
+  
+            <div class="modal-footer">
+              <button ng-click="toggleFilterPopup()" type="button" class="btn btn-default"
+                data-dismiss="modal">Close</button>
+              <button ng-if="filter_column" type="button" class="btn btn-primary" ng-click="filterTable()">
+                filter</button>
+              <button ng-if="!filter_column" type="button" class="btn btn-primary" ng-click="viewTable()"> View</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" ng-click="saveChanges()">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  
+    <div id="closeSidePopup" ng-if="deleteIcon" class="filterPopup">
+      Are you sure?
+      &nbsp
+  
+      <button ng-click="deleteColumn()">Yes</button>
+    </div>
+  
+    <div ng-if="false">
+      <div ng-if="false" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Column Color</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="custom-select-wrapper">
+              <label for="exampleFormControlSelect2">Select Column</label>
+              <select class="custom-select" ng-model="selectedValue" id="exampleFormControlSelect2">
+                <option value="{{columns.field}}" ng-repeat="columns in column " ng-selected="columns === column[0]">
+                  {{columns.fieldName}}
+                </option>
+              </select>
+              <div>
+                <input type="color" ng-model="myData">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" ng-click="getData()" data-dismiss="modal">Save
+                changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-show="grouping" ng_class="grouping()">
+  
+      <table id="mytable" class="table display styled-table" cellspacing="0" cellpadding="2" ng-table="tableParams">
+  
+        <thead>
+          <tr class="dnd-moved">
+            <th ng-if="toggleFirstColumn" class="sticky-column-head">
+              MyViews
+            </th>
+            <th ng-class="{'freeze':isFreeze}">
+  
+  
+              <div style="display:flex; gap: 10px; align-items: center; ">
+  
+                <div style="align-items: center;align-items: center;
+                display: flex;
+                gap: 11px;">
+  
+                  <input type="checkbox" class="markCheck" style="margin: 0;" ng-click="checkBoxchanges($event, item)" />
+                  <label for="" style="margin: 0;"> checkbox</label>
+                </div>
+  
+            </th>
+            <th draggable="true" class="columns" id="{{'columns'+$index}}" ng-repeat="columns in column track by $index"
+              ng-class="{'freeze': columns.frozen}">
+              <div style="display: flex;padding: 0 20px; position: relative;justify-content: space-around;">
+                <div style="display: flex;gap: 20px;align-items: center;position: relative;">
+  
+                  <span style="font-size: initial;" class="material-symbols-outlined">expand_circle_down</span>
+                  {{columns.fieldName}}
+                  <div style="position: relative;">
+  
+  
+  
+                    <span id="triggerClosePopup" class=" icon material-symbols-outlined list-icon"
+                      ng-click="togglePopup($index)">
+                      menu
+                    </span>
+  
+                    <!-- Popup dropdown container -->
+                    <div id="popup-{{$index}}" class="popup-container">
+                      <!-- Popup dropdown items -->
+                      <div ng-repeat="option in moreOptions track by $index"
+                        ng-click="popupFunction(option, $index,columns, $event )" id="triggerClosePopup">
+  
+                        <div class="popup-item" ng-style="option.field == 'Delete field' && {'color':'red'}">
+                          <span style="font-size: initial;" class="material-symbols-outlined">{{option.icon}}</span>
+                          {{option.field}}
+  
+  
+                        </div>
+  
+                        <div class="popup-item" ng-repeat="color in HeaderColorOptions"
+                          ng-if="isColorOption && (option.field === 'Set Column Header Color' || option.field === 'Set Full Column Color')&& colorPopupIndex === $parent.$index;"
+                          ng-click="closePopup($parent.$parent.$parent.$index);headerColor($parent.$parent.$parent.$index,color,option.field,columns )"
+                          style="    border-bottom: 1px solid rgb(126, 126, 123);">{{color}} </div>
+                      </div>
+                      <div style="position:absolute; top: 0px; left:-14px">
+                        <div ng-if="editPopup" class="popup-container-1">
+                          <div class="popup-item edit-popup">
+                            <div class="field-wrap">{{columns.fieldName}}</div>
+                            <div>
+  
+                              <select name="" id="" style=" width: 405px;
+                          border-radius: 5px; height: 25px;">
+                                <option value="1">Single select</option>
+                                <option value="2">Multi select</option>
+                              </select>
+                            </div>
+                            <div class="popup-lable-content">
+                              <span>
+                                Select one predefined option from a list
+                              </span>
+                            </div>
+                            <div class="switch-container">
+                              <div>
+                                <label class="switch">
+                                  <input type="checkbox" checked>
+                                  <span class="slider round"></span>
+                                </label><span style="position: relative; top: 6px; right: 13px;">Color-code option</span>
+                              </div>
+                              <div><span class="material-symbols-outlined">
+                                  sort
+                                </span>
+                                <span class="add-text">Alphabetize</span>
+                              </div>
+                            </div>
+                            <div class="card-container">
+                              <div>
+                                <div class="card" draggable="true">
+                                  <span class="drag-icon material-symbols-outlined">
+                                    drag_indicator
+                                  </span>
+                                  <span class="align-icon material-symbols-outlined">
+                                    expand_circle_down
+                                  </span>
+                                  <div class="card-input">
+                                    <input type="text" class="card-input" ng-model="card">
+                                  </div>
+                                  <span class=" drag-icon material-symbols-outlined">
+                                    close
+                                  </span>
+                                </div>
+                                <div class="card" draggable="true">
+                                  <span class="drag-icon material-symbols-outlined">
+                                    drag_indicator
+                                  </span>
+                                  <span class="align-icon material-symbols-outlined">
+                                    expand_circle_down
+                                  </span>
+                                  <div class="card-input">
+                                    <input type="text" class="card-input" ng-model="card">
+                                  </div>
+                                  <span class=" drag-icon material-symbols-outlined">
+                                    close
+                                  </span>
+                                </div>
+                                <div class="card" draggable="true">
+                                  <span class="drag-icon material-symbols-outlined">
+                                    drag_indicator
+                                  </span>
+                                  <span class="align-icon material-symbols-outlined">
+                                    expand_circle_down
+                                  </span>
+                                  <div class="card-input">
+                                    <input type="text" class="card-input" ng-model="card">
+                                  </div>
+                                  <span class=" drag-icon material-symbols-outlined">
+                                    close
+                                  </span>
+                                </div>
+                                <div>
+                                  <span class="add-icon material-symbols-outlined">
+                                    add_circle
+                                  </span><span class="add-text">Add option</span>
+                                </div>
+                              </div>
+  
+                            </div>
+                            <div style="width: 100%; color: #929597;">
+                              <label for="">
+                                Default option
+                              </label>
+                              <select style="width: 100%;" name="" id="">
+                                <option value="">option 1</option>
+                                <option value="">option 2</option>
+                                <option value="">option 3</option>
+                              </select>
+                            </div>
+                            <div class="switch-container">
+                              <div>
+                                <span class="material-symbols-outlined">
+                                  add
+                                </span>
+                                <span class="add-text">Add description</span>
+                              </div>
+                              <div>
+                                <button class="btn-secondary">Cancel</button>
+                                <button class="btn-primary">Save</button>
+                              </div>
+                            </div>
+  
+                            <div>
+  
+                            </div>
+  
+                            <div class="popup-item" ng-repeat="color in HeaderColorOptions"
+                              ng-if="isColorOption && (option.field === 'Set Column Header Color' || option.field === 'Set Full Column Color')&& colorPopupIndex === $parent.$index;"
+                              ng-click="closePopup($parent.$parent.$parent.$index);headerColor($parent.$parent.$parent.$index,color,option.field,columns )"
+                              style="    border-bottom: 1px solid rgb(126, 126, 123);">{{color}} </div>
+                          </div>
+                        </div>
+                      </div>
+  
+                    </div>
+                  </div>
+  
+  
+                  <div style="position: relative; padding-right:15px;" ng-if="isFreeze"
+                    ng-click="freezeColumn($index,'columns'+$index)">
+                    <span style="font-size: 15px;" class="material-symbols-outlined">
+                      ac_unit
+                    </span>
+                  </div>
+  
+                </div>
+              </div>
+  
+            </th>
+          </tr>
+          <div id="closeSidePopup" ng-if="addFieldPopup" class="filterPopup">
+            <label for="">Header Name: </label>
+            <input required type="text" ng-model="headerName">
+            <div style="margin-top: 10px;">
+              <button ng-click="toggleaddFieldPopup(headerName)">Submit</button>
+            </div>
+  
+          </div>
+        </thead>
+        <tbody>
+          <tr draggable="true" id="{{'rows'+i}}"
+            ng-repeat="(i, item) in tableData | orderBy:sortedFieldList  track by $index"
+            class="rows active-row dnd-moved">
+            <td ng-if="toggleFirstColumn && i === 0" class="sticky-column-body my-select-td" style="border: none;"
+              rowspan="20">
+              <div style="display: flex;justify-content: center;">
+                <input type="search" placeholder="Search">
+              </div>
+              <div class="view-title" ng-click="viewlistFunc()">
+  
+                <span class="material-symbols-outlined" style="font-size: 22px;">
+                  {{expandIcon}}
+                </span>My Views
+              </div>
+              <div ng-if="viewIcon">
+                <ul ng-repeat="data in listData" class="list-data" style="border-bottom: 1px solid lavender;">
+                  <li class="view-value" ng-click="getListValue($event)">{{data}}</li>
+                </ul>
+              </div>
+            </td>
+            <td ng-if="toggleFirstColumn && i > 19" class="sticky-column-body my-select-td" style="border: none;">
+  
+            </td>
+  
+            <td ng-class="{'freeze-body':isFreeze}">
+              <input type="checkbox" ng-click="format(item,i, $event)" ng-checked='item.checked' class="myCheck" />
+            </td>
+            <td id="{{'columns'+$index}}" ng-keyDown="keyPresses($event, i, j)" ng-dblclick="selectCols(i, j)"
+              ng-repeat="(j, col) in column track by $index"
+              ng-class="{cellColor : col.type == 'number', 'freeze': col.frozen  }"
+              ng-style="item[col.field] >=5 &&  col.type == 'number' && item[col.field] <=20 && {'background-color':'#f54225'} || item[col.field] <5 && col.type == 'number' && {'background-color':'#7bdaff'} || item[col.field] >20 && col.type == 'number' && {'background-color':'#84e784'} || col.field ==  selectedValue && myStyle "
+              ng-if="!item.editable">
+              <p id="{{i+'-'+j}}">{{item[col.field]}}</p>
+  
+              <input id="{{i+'-'+j+'-index'}}" ng-style="{'display': 'none'}"
+                ng-if="(col.type === 'input' || col.type === 'email')" type="{{col.dataType ? col.dataType : 'text'}}"
+                ng-model="item[col.field]" />
+              <select ng-style="{'display': 'none'}" id="{{i+'-'+j+'-index'}}" ng-if="col.type === 'select'"
+                ng-model="item[col.field]" ng-options="x for x in col.dropdowndata"></select>
+  
+            </td>
+            <td ng-repeat="col in column" ng-class="{cellColor : col.type == 'number'  }"
+              ng-style="item[col.field] >=5 && item[col.field] <=20 && col.type == 'number' && {'background-color':'#f54225'} || item[col.field] <5 && col.type == 'number' && {'background-color':'#7bdaff'} || item[col.field] >20 && col.type == 'number' && {'background-color':'#84e784'}"
+              ng-if="item.editable" ng-disabled="!col['editable']">
+              <input ng-if="col.type === 'input'" type="text" ng-model="item[col.field]" />
+              <select ng-if="col.type === 'select'" ng-model="item[col.field]"
+                ng-options="x for x in col.dropdowndata"></select>
+              <input ng-if="col.type === 'date'" type="date" ng-model="new Date(item[col.field])" />
+              <input ng-if="col.type === 'number'" type="number" ng-model="item[col.field]" />
+  
+  
+            </td>
+            <td ng-if="{{!checked.includes(i)}}">
+              <input type="checkbox" id="myCheckbox" ng-click="flagIcon(i)">
+            </td>
+  
+          </tr>
+        </tbody>
+  
+      </table>
+      <div class="pagination" style="display: flex;" ng-show="pagination_details">
+        <div class="page-size" ng-class="showPagination()">
+          <label>Page</label>
+          <select ng-model="itemsPerPage" ng-change="numOfPagess()">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+          <div class="page-selection">
+            <ul class="pagination-list" style="display: flex; list-style: none;">
+  
+  
+              <li class="btn-pagination-li" ng-if="curPage !== 1">
+                <a class="btn-pagination" href="#" ng-click="prevPage()">Previous</a>
+              </li>
+  
+              <div ng-repeat="i in generateArray(noOfPages) track by $index"
+                ng-if="$index >= curPage - 3 && $index <= curPage + 1">
+                <li class="btn-pagination-li">
+                  <button class="pagination-btn" ng-click="gotopage(i)" ng-class="{active: i===curPage}">{{i}}</button>
+                </li>
+  
+              </div>
+  
+              <li class="btn-pagination-li" ng-if="curPage !== noOfPages-1">
+                <a class="btn-pagination" href="#" ng-click="nextPage()">Next</a>
+              </li>
+  
+            </ul>
+          </div>
+  
+        </div>
+  
+      </div>
+    </div>
+  
+    <div ng-if="isGroup">
+      <div class="group-container">
+        <div class="group-head" ng-repeat="col in column">
+          <div>
+            {{col.fieldName}}
+          </div>
+        </div>
+        <div class="body">
+          <div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
