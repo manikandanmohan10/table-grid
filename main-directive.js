@@ -97,8 +97,8 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         var isClickedElementTriggerButton =
           event.target.matches("#triggerClosePopup");
         if (!isClickedElementChildOfPopup && !isClickedElementTriggerButton) {
-          var isClickedElementGChildofPop = event.target.matches(".sortPopup");
-          if (!isClickedElementGChildofPop) {
+          var isClickedElementGChildOfPop = event.target.matches(".sortPopup");
+          if (!isClickedElementGChildOfPop) {
             $scope.sortPopupVisible = false;
             $scope.$apply();
           }
@@ -352,9 +352,9 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         }
       };
       $scope.checkBoxchanges = function (event, item) {
-        let datacheck = document.querySelectorAll(".markCheck");
+        let dataCheck = document.querySelectorAll(".markCheck");
         $scope.data.forEach((d) => {
-          d.checked = datacheck[0].checked;
+          d.checked = dataCheck[0].checked;
         });
       };
 
@@ -1100,7 +1100,7 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         if (!$scope.checked.includes(index)) {
           checked.push(index);
         } else {
-          var checkbox = $scope.checked.indeof(index);
+          var checkbox = $scope.checked.indexof(index);
           $scope.checked.splice(checkbox, 1);
         }
       };
@@ -1121,7 +1121,7 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
       }, 1000);
 
       $scope.addFieldPopup = false;
-      $scope.toggleaddFieldPopup = (headerName) => {
+      $scope.toggleAddFieldPopup = (headerName) => {
         $scope.addFieldPopup = false;
         $scope.addColumn(
           headerName,
