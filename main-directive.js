@@ -152,8 +152,8 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         }
       });
       setTimeout(() => {
-        $scope.hidingColumnArryList = [...$scope.column];
-        $scope.constColumnArryList = [...$scope.column];
+        $scope.hidingColumnArrayList = [...$scope.column];
+        $scope.constColumnArrayList = [...$scope.column];
       }, 1000);
 
       setTimeout(() => {
@@ -1047,7 +1047,7 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         } else {
           checBox = checked;
         }
-        $scope.constColumnArryList.forEach((da) => {
+        $scope.constColumnArrayList.forEach((da) => {
           if (da["field"] == event) {
             da["checked"] = checBox;
           }
@@ -1060,9 +1060,9 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
             }
           });
         } else {
-          $scope.hidingColumnArryList.forEach((d) => {
+          $scope.hidingColumnArrayList.forEach((d) => {
             if (d["field"] == event) {
-              let index = $scope.hidingColumnArryList.indexOf(d);
+              let index = $scope.hidingColumnArrayList.indexOf(d);
               $scope.column.splice(index, 0, d);
             }
           });
@@ -1080,9 +1080,9 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         $scope.$apply();
       };
 
-      $scope.hidenColumnFilter = (event) => {
-        $scope.hidingColumnArryList = $scope.constColumnArryList;
-        $scope.hidingColumnArryList = $scope.hidingColumnArryList.filter(
+      $scope.hiddenColumnFilter = (event) => {
+        $scope.hidingColumnArrayList = $scope.constColumnArrayList;
+        $scope.hidingColumnArrayList = $scope.hidingColumnArrayList.filter(
           (data) => {
             if (data["field"].includes(event)) {
               return true;
@@ -1144,11 +1144,11 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         };
         if (option.field == "Insert left") {
           $scope.column.splice(columnIndex, 0, data);
-          $scope.hidingColumnArryList = $scope.column;
+          $scope.hidingColumnArrayList = $scope.column;
           $scope.isColorOption = !$scope.isColorOption;
         } else if (option.field == "Insert right") {
           $scope.column.splice(columnIndex + 1, 0, data);
-          $scope.hidingColumnArryList = $scope.column;
+          $scope.hidingColumnArrayList = $scope.column;
           $scope.isColorOption = !$scope.isColorOption;
         }
       };
@@ -1160,7 +1160,7 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
           "none";
         columnIndex = $scope.column.indexOf($scope.columnNamee);
         $scope.column.splice(columnIndex, 1);
-        $scope.hidingColumnArryList = $scope.column;
+        $scope.hidingColumnArrayList = $scope.column;
       };
 
       $scope.countNames = function (obj, name) {
@@ -1187,7 +1187,7 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
           checked: columnName.checked,
         };
         $scope.column.splice(columnIndex + 1, 0, data);
-        $scope.hidingColumnArryList = $scope.column;
+        $scope.hidingColumnArrayList = $scope.column;
         for (let i = 0; i < $scope.data.length; i++) {
           $scope.data[i][newField] = $scope.data[i][columnName.field];
         }

@@ -28,16 +28,16 @@
         <div class="icon-content">
           <span class="material-symbols-outlined icon-size" ng-click="callDropdown()" id="triggerClosePopup">
             visibility_off
-          </span> <span ng-if="(hidingColumnArryList.length - column.length) >=1">{{hidingColumnArryList.length -
+          </span> <span ng-if="(hidingColumnArrayList.length - column.length) >=1">{{hidingColumnArrayList.length -
             column.length}}</span> Hidden fields
         </div>
         <div id="closePopup" class="hide-column-list " ng-if="viewHideColumn">
           <div>
-            <input style="max-width: 135px;" placeholder="Filter" ng-model="FilterHidenList" type="serach"
-              ng-change="hidenColumnFilter(FilterHidenList)" />
+            <input style="max-width: 135px;" placeholder="Filter" ng-model="FilterHiddenList" type="serach"
+              ng-change="hiddenColumnFilter(FilterHiddenList)" />
             <span class="material-symbols-outlined">help</span>
           </div>
-          <ul ng-repeat="col in hidingColumnArryList" draggable="true" class="list-data">
+          <ul ng-repeat="col in hidingColumnArrayList" draggable="true" class="list-data">
             <li>{{col.fieldName}}</li>
             <input type="checkbox" ng-model="col.checked" ng-click="hidingColumn(col.field, $event)" />
           </ul>
@@ -185,7 +185,7 @@
                   <div class="searchinp">
                     <div style="background-color: none; align-items: center; gap: 15px;" class="addColumnFil">
                       <input type="text" ng-model="searchItem" class="inp" style="    border-radius: 5px;
-                      text-align: center;" ng-change="hidenColumnFilter(searchItem)" />
+                      text-align: center;" ng-change="hiddenColumnFilter(searchItem)" />
                       <p class="material-symbols-outlined icon searchIcon" style="position: absolute;left: 27px;">search
                       </p>
                       <div>
@@ -203,7 +203,7 @@
               <div ng-if="(searchItem)" style="    width: 270px;
               overflow: auto;border: 1px solid;height: 250px;">
   
-                <ul ng-repeat="col in hidingColumnArryList" class="list-data">
+                <ul ng-repeat="col in hidingColumnArrayList" class="list-data">
                   <li ng-click="getColumn(col.field)">{{col.fieldName}}</li>
                 </ul>
               </div>
