@@ -1069,13 +1069,13 @@ angular.module("myApp", []).directive("myDirective", function ($http) {
         }
       };
 
-      $scope.Checkchecked = [];
+      $scope.checkChecked = [];
       $scope.flagIcon = (index) => {
-        if (!$scope.Checkchecked.includes(index)) {
-          $scope.Checkchecked.push(index);
+        if (!$scope.checkChecked.includes(index)) {
+          $scope.checkChecked.push(index);
         } else {
-          var checkbox = $scope.Checkchecked.indexOf(index);
-          $scope.Checkchecked.splice(checkbox, 1);
+          var checkbox = $scope.checkChecked.indexOf(index);
+          $scope.checkChecked.splice(checkbox, 1);
         }
         $scope.$apply();
       };
