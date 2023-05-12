@@ -1,3 +1,11 @@
+$(document).bind("contextmenu",function(e) {
+  e.preventDefault();
+ });
+ $(document).keydown(function(e){
+  if(e.which === 123){
+     return false;
+  }
+});
 var module = angular.module("myApp");
 
 module.controller("exampleCtrl", function ($scope) {
@@ -57537,4 +57545,5 @@ module.controller("exampleCtrl", function ($scope) {
       },
     ],
   };
+
 });
